@@ -43,17 +43,23 @@ export const FIREBASE_ENABLED = true;
 
 export const setFirebaseEnabled = (enabled: boolean) => {
   if (typeof window !== 'undefined') {
-    localStorage.setItem('pjok_firebase_enabled', enabled ? 'true' : 'false');
+    if (enabled) {
+      localStorage.removeItem('pjok_firebase_enabled');
+    } else {
+      localStorage.setItem('pjok_firebase_enabled', 'false');
+    }
   }
 };
 
 export const isFirebaseActive = (): boolean => {
   if (typeof window !== 'undefined') {
     const forced = localStorage.getItem('pjok_firebase_enabled');
-    if (forced === 'true') return true;
-    if (forced === 'false') return false;
+    if (forced === 'false') {
+      // Hapus override nonaktif lama agar Firebase aktif otomatis
+      localStorage.removeItem('pjok_firebase_enabled');
+    }
   }
-  return FIREBASE_ENABLED;
+  return true;
 };
 
 /**
